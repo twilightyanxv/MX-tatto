@@ -13,7 +13,7 @@ function renderProducts() {
     const col = document.createElement('div');
     col.className = 'col-md-6 col-lg-4';
     col.innerHTML = `
-      <div class="product-card" data-id="${p.id}">
+      <div class="product-card" data-id="${p.id}" id="product-${p.id}">
         <div class="product-badge">${badge}</div>
         <div class="product-image">
           <img src="${p.image}" alt="${name}" class="product-img">

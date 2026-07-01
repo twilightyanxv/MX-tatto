@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mxtatto.yanxv.com/sitemap.xml
+Sitemap: https://mxtattoo.yanxv.com/sitemap.xml
