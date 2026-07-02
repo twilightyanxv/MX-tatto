@@ -1,0 +1,38 @@
+name: Submit URLs to Bing
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Submit URLs to Bing Webmaster Tools
+        env:
+          BING_API_KEY: ${{ secrets.BING_API_KEY }}
+        run: |
+          if [ -z "$BING_API_KEY" ]; then
+            echo "WARNING: BING_API_KEY not set. Skipping submission."
+            echo "Set it in GitHub repo: Settings > Secrets and variables > Actions > New repository secret"
+            exit 0
+          fi
+
+          urls=$(grep -oP '<loc>\K[^<]+' sitemap.xml | sort -u)
+          total=$(echo "$urls" | wc -l)
+          count=0
+
+          for url in $urls; do
+            response=$(curl -s -w "\n%{http_code}" -X POST \
+              "https://ssl.bing.com/webmaster/api.svc/json/SubmitUrl?apikey=${BING_API_KEY}" \
+              -H "Content-Type: application/json" \
+              -d "{\"siteUrl\":\"https://mxtattoo.yanxv.com\",\"url\":\"$url\"}")
+            http_code=$(echo "$response" | tail -1)
+            count=$((count + 1))
+            echo "[$count/$total] $url => HTTP $http_code"
+          done
+
+          echo "Done. Submitted $count URLs to Bing."
