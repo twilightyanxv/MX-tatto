@@ -104,5 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  document.addEventListener('click', e => {
+    const nav = document.querySelector('.navbar-collapse');
+    if (nav.classList.contains('show') && !e.target.closest('.navbar')) {
+      bootstrap.Collapse.getInstance(nav)?.hide();
+    }
+  });
+
   i18n.updatePage();
 });
